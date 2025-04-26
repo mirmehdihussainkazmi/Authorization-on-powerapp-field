@@ -1,0 +1,24 @@
+function validateSpecialCharacters(executionContext) {
+    var formContext = executionContext.getFormContext();
+    var fieldName = "msdyn_name";
+
+    var attribute = formContext.getAttribute(fieldName);
+    var control = formContext.getControl(fieldName);
+
+    if (!attribute || !control) return;
+
+    var value = attribute.getValue();
+    var regex = /[.\\\"\/:;|?'<>*#~%{}+\r\n]/;
+
+    // Always clear previous notification
+    control.clearNotification();
+
+    if (value && regex.test(value)) {
+        control.setNotification("Value may not contain any of the following characters: . \\ \" / : ; | ? ' < > * # ~ % { } +");
+
+        var eventArgs = executionContext.getEventArgs?.();
+        if (eventArgs && typeof eventArgs.preventDefault === "function") {
+            eventArgs.preventDefault();
+        }
+    }
+}
